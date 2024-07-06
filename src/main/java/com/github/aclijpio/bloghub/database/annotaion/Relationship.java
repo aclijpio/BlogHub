@@ -1,5 +1,7 @@
-package com.github.aclijpio.bloghub.field;
+package com.github.aclijpio.bloghub.database.annotaion;
 
+
+import com.github.aclijpio.bloghub.database.field.RelationshipType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

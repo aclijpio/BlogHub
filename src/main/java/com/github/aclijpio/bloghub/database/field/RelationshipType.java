@@ -1,4 +1,4 @@
-package com.github.aclijpio.bloghub.field;
+package com.github.aclijpio.bloghub.database.field;
 
 public enum RelationshipType {
 

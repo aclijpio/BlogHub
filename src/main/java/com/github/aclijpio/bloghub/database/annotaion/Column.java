@@ -1,4 +1,4 @@
-package com.github.aclijpio.bloghub.configs;
+package com.github.aclijpio.bloghub.database.annotaion;
 
 
 import java.lang.annotation.*;
@@ -7,6 +7,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Column {
 
-    String value();
+    String value() default "";
 
 }

@@ -1,15 +1,14 @@
 package com.github.aclijpio.bloghub.utils;
 
-import com.github.aclijpio.bloghub.configs.EntityInfo;
+import com.github.aclijpio.bloghub.database.field.EntityInfo;
+import com.github.aclijpio.bloghub.database.util.EntityAnnotationUtil;
 import com.github.aclijpio.bloghub.entities.Blog;
 import com.github.aclijpio.bloghub.entities.User;
-import com.github.aclijpio.bloghub.field.EntityField;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Map;
 
 class EntityAnnotationUtilTest {
 
@@ -19,7 +18,6 @@ class EntityAnnotationUtilTest {
     void setUp() {
         user = new User(
                 "almaz",
-                "password",
                 new Blog()
         );
     }
@@ -36,7 +34,7 @@ class EntityAnnotationUtilTest {
 
         String query = "select * from %s".formatted(entityInfo.getTableName());
 
-        try(PreparedStatement preparedStatement = ConnectionPool.UTIL.getConnection().prepareStatement(query)){
+        try(PreparedStatement preparedStatement = ConnectionPoolDefault.UTIL.getConnection().prepareStatement(query)){
 
 
 

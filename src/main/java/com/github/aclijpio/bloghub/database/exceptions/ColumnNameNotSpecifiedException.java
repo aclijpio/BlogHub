@@ -1,4 +1,4 @@
-package com.github.aclijpio.bloghub.configs.exceptions;
+package com.github.aclijpio.bloghub.database.exceptions;
 import lombok.experimental.StandardException;
 
 @StandardException
