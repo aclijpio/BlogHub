@@ -1,4 +1,4 @@
-package com.github.aclijpio.bloghub.database.annotaion;
+package com.github.aclijpio.bloghub.database.annotaions;
 
 
 import java.lang.annotation.*;

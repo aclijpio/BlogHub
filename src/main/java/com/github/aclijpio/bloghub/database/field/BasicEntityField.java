@@ -1,6 +1,5 @@
 package com.github.aclijpio.bloghub.database.field;
 
-import com.github.aclijpio.bloghub.database.annotaion.Column;
 import com.github.aclijpio.bloghub.database.exceptions.ColumnNameNotSpecifiedException;
 
 public class BasicEntityField extends EntityField {

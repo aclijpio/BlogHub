@@ -1,25 +1,27 @@
-package com.github.aclijpio.bloghub.repositories;
+package com.github.aclijpio.bloghub.database.repository;
 
 import com.github.aclijpio.bloghub.database.field.EntityInfo;
 import com.github.aclijpio.bloghub.database.util.EntityAnnotationUtil;
-import com.github.aclijpio.bloghub.utils.ConnectionPoolDefault;
+import com.github.aclijpio.bloghub.database.util.DefaultConnectionPool;
+import com.github.aclijpio.bloghub.entities.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-public abstract class SimpleCrudRepository<T, ID> implements CrudRepository<T, ID>{
+public abstract class SimpleCrudRepository<T, ID> implements CrudRepository<T, ID> {
 
 
-    private final Class<T> clazz;
     private final EntityInfo entityInfo;
 
     protected SimpleCrudRepository(Class<T> clazz) {
-        this.clazz = clazz;
-        this.entityInfo = EntityAnnotationUtil.get(this.clazz);
+        this.entityInfo = EntityAnnotationUtil.get(clazz);
     }
 
     @Override
@@ -39,7 +41,19 @@ public abstract class SimpleCrudRepository<T, ID> implements CrudRepository<T, I
 
     @Override
     public Iterable<T> findAll() {
-        return null;
+        return executeQuery("select * from %s".formatted(entityInfo.getTableName()), ps -> {
+
+            try (ResultSet rs = ps.executeQuery()) {
+                List<T> results = new ArrayList<>();
+                while (rs.next()) {
+                    results.add((T) new User(rs.getString(0)));
+                }
+                return results;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+        });
     }
 
     @Override
@@ -62,27 +76,14 @@ public abstract class SimpleCrudRepository<T, ID> implements CrudRepository<T, I
 
     }
 
-    private <R> R executeQuery(String query, Function<PreparedStatement, R> function){
-        try(Connection connection = ConnectionPoolDefault.UTIL.getConnection();
-            PreparedStatement ps = connection.prepareStatement(query))
-        {
+    public <R> R executeQuery(String query, Function<PreparedStatement, R> function) {
+        try (Connection connection = DefaultConnectionPool.UTIL.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
             return function.apply(ps);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-    private <R> R multiExecuteQuery(String query, Function<PreparedStatement, R> function){
-
-        try(Connection connection = ConnectionPoolDefault.UTIL.getConnection();
-            PreparedStatement ps = connection.prepareStatement(query))
-        {
-            return function.apply(ps);
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
 }
+

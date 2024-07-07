@@ -1,8 +1,8 @@
 package com.github.aclijpio.bloghub.entities;
 
 
-import com.github.aclijpio.bloghub.database.annotaion.Column;
-import com.github.aclijpio.bloghub.database.annotaion.Id;
+import com.github.aclijpio.bloghub.database.annotaions.Column;
+import com.github.aclijpio.bloghub.database.annotaions.Id;
 import lombok.Getter;
 import lombok.Setter;
 

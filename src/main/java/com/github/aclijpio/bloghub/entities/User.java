@@ -1,14 +1,14 @@
 package com.github.aclijpio.bloghub.entities;
 
-import com.github.aclijpio.bloghub.database.annotaion.Column;
-import com.github.aclijpio.bloghub.database.annotaion.Entity;
-import com.github.aclijpio.bloghub.database.annotaion.Id;
-import com.github.aclijpio.bloghub.database.annotaion.Relationship;
+import com.github.aclijpio.bloghub.database.annotaions.Column;
+import com.github.aclijpio.bloghub.database.annotaions.Entity;
+import com.github.aclijpio.bloghub.database.annotaions.Id;
+import com.github.aclijpio.bloghub.database.annotaions.Relationship;
 import com.github.aclijpio.bloghub.database.field.RelationshipType;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity("user")
+@Entity("Users")
 @Getter
 @Setter
 public class User {
@@ -23,8 +23,7 @@ public class User {
     @Relationship(value = RelationshipType.ONE_TO_ONE, mapperBy = "blog_id")
     private Blog blog;
 
-    public User(String username, Blog blog) {
+    public User(String username) {
         this.username = username;
-        this.blog = blog;
     }
 }

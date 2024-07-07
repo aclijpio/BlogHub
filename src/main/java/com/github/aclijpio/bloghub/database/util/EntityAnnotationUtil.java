@@ -1,12 +1,12 @@
 package com.github.aclijpio.bloghub.database.util;
 
-import com.github.aclijpio.bloghub.database.annotaion.Column;
-import com.github.aclijpio.bloghub.database.annotaion.Entity;
-import com.github.aclijpio.bloghub.database.annotaion.Id;
+import com.github.aclijpio.bloghub.database.annotaions.Column;
+import com.github.aclijpio.bloghub.database.annotaions.Entity;
+import com.github.aclijpio.bloghub.database.annotaions.Id;
 import com.github.aclijpio.bloghub.database.exceptions.IdNotSpecifiedException;
 import com.github.aclijpio.bloghub.database.field.*;
 import com.github.aclijpio.bloghub.database.exceptions.ColumnNameNotSpecifiedException;
-import com.github.aclijpio.bloghub.database.annotaion.Relationship;
+import com.github.aclijpio.bloghub.database.annotaions.Relationship;
 
 
 import java.lang.reflect.Field;

@@ -1,4 +1,4 @@
-package com.github.aclijpio.bloghub.repositories;
+package com.github.aclijpio.bloghub.database.repository;
 
 import java.util.Optional;
 

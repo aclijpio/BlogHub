@@ -1,4 +1,7 @@
-package com.github.aclijpio.bloghub.database.annotaion;
+package com.github.aclijpio.bloghub.database.annotaions;
+
+
+import com.github.aclijpio.bloghub.database.field.RelationshipType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,6 +10,7 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Id {
-    String value() default "";
+public @interface Relationship {
+    RelationshipType value();
+    String mapperBy();
 }
