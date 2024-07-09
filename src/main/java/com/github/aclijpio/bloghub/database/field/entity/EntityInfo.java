@@ -1,4 +1,4 @@
-package com.github.aclijpio.bloghub.database.field;
+package com.github.aclijpio.bloghub.database.field.entity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,12 +11,13 @@ import java.util.Map;
 public class EntityInfo {
 
     private final String tableName;
+    @Getter
     private final Map<String, EntityField> columnNames = new HashMap<>();
 
     @Setter
     private String id;
 
-    public EntityInfo(String tableName) {
+    public EntityInfo( String tableName) {
         this.tableName = tableName;
     }
 
@@ -28,4 +29,9 @@ public class EntityInfo {
     public boolean isIdExists(){
         return id != null;
     }
+
+    final public EntityPool getEntityPool(Object object){
+        return EntityPool.create(this, object);
+    }
+
 }

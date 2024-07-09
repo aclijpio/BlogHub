@@ -8,9 +8,10 @@ import com.github.aclijpio.bloghub.database.field.RelationshipType;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity("Users")
 @Getter
 @Setter
+@Entity("Users")
+
 public class User {
 
     @Id

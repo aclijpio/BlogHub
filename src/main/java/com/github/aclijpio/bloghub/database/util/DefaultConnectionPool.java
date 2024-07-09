@@ -15,14 +15,12 @@ public enum DefaultConnectionPool {
     private static final HikariDataSource dataSource;
 
     static {
-
         Datasource ds = null;
         try {
 
             final AppConfig loadedConfig =  ConfigLoader.LOADER.getConfig();
             ds = loadedConfig.getDatasource();
 
-            System.out.println(ds);
             HikariConfig config = new HikariConfig();
             config.setJdbcUrl(ds.getUrl());
             config.setUsername(ds.getUsername());
@@ -34,7 +32,6 @@ public enum DefaultConnectionPool {
             if (ds != null){
                 log.info("""
                     Loaded datasource with: \
-
                     \turl: %s
                     \tusername: %s
                     \tpassword: %s

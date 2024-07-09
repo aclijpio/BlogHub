@@ -4,9 +4,11 @@ import com.github.aclijpio.bloghub.database.annotaions.Column;
 import com.github.aclijpio.bloghub.database.annotaions.Entity;
 import com.github.aclijpio.bloghub.database.annotaions.Id;
 import com.github.aclijpio.bloghub.database.exceptions.IdNotSpecifiedException;
+import com.github.aclijpio.bloghub.database.exceptions.TableNameNotSpecifiedException;
 import com.github.aclijpio.bloghub.database.field.*;
 import com.github.aclijpio.bloghub.database.exceptions.ColumnNameNotSpecifiedException;
 import com.github.aclijpio.bloghub.database.annotaions.Relationship;
+import com.github.aclijpio.bloghub.database.field.entity.EntityInfo;
 
 
 import java.lang.reflect.Field;
@@ -18,7 +20,7 @@ public class EntityAnnotationUtil {
 
         Entity entity = clazz.getAnnotation(Entity.class);
         if (entity == null )
-            throw new ColumnNameNotSpecifiedException("The table name is not specified.");
+            throw new TableNameNotSpecifiedException("The table name is not specified.");
 
         Field [] fields = clazz.getDeclaredFields();
 
@@ -34,8 +36,7 @@ public class EntityAnnotationUtil {
             if (column != null)
                 entityInfo.addField(
                         field.getName(),
-                        new BasicEntityField(columNameConverter(column.value(), field))
-                );
+                        new BasicEntityField(columNameConverter(column.value(), field)));
             else if (relationship != null)
                 entityInfo.addField(
                         field.getName(),
@@ -56,9 +57,10 @@ public class EntityAnnotationUtil {
         return entityInfo;
     }
 
-    private static String columNameConverter(String columnName, Field field){
-        if (columnName.isEmpty())
+    private static String columNameConverter(String columnName, Field field) {
+        if (columnName.isEmpty()) {
             return field.getName();
+        }
         return columnName;
     }
 

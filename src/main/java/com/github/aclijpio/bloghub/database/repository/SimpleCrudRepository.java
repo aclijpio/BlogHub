@@ -1,6 +1,6 @@
 package com.github.aclijpio.bloghub.database.repository;
 
-import com.github.aclijpio.bloghub.database.field.EntityInfo;
+import com.github.aclijpio.bloghub.database.field.entity.EntityInfo;
 import com.github.aclijpio.bloghub.database.util.EntityAnnotationUtil;
 import com.github.aclijpio.bloghub.database.util.DefaultConnectionPool;
 
@@ -27,6 +27,8 @@ public abstract class SimpleCrudRepository<T, ID> implements CrudRepository<T, I
 
     @Override
     public T save(T t) {
+
+
 
 
         return null;

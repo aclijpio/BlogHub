@@ -13,9 +13,11 @@ class UserRepositoryTest {
     void setUp() {
         userRepository = new UserRepository();
     }
+
     @Test
     public void findAllUsers(){
         userRepository.findAll();
+
     }
 
 }
