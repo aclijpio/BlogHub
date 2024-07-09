@@ -41,8 +41,11 @@ public class EntityAnnotationUtil {
                         field.getName(),
                         new RelationshipEntityField(columNameConverter(relationship.mapperBy(), field), relationship.value())
                 );
-            else if (id != null)
+            else if (id != null) {
+                if (entityInfo.isIdExists())
+                    throw new IdNotSpecifiedException("There cannot be more than one a Id in a entity.");
                 entityInfo.setId(columNameConverter(id.value(), field));
+            }
             else
                 throw new ColumnNameNotSpecifiedException("The column name is not specified.");
         }

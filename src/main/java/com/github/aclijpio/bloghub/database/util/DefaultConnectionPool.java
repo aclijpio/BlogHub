@@ -4,26 +4,44 @@ import com.github.aclijpio.bloghub.database.util.source.AppConfig;
 import com.github.aclijpio.bloghub.database.util.source.Datasource;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.extern.java.Log;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-
+@Log
 public enum DefaultConnectionPool {
     UTIL;
 
     private static final HikariDataSource dataSource;
 
     static {
-        final AppConfig loadedConfig = ConfigLoader.LOADER.loadConfig();
-        final Datasource datasource = loadedConfig.getDatasource();
 
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(datasource.getUrl());
-        config.setUsername(datasource.getUsername());
-        config.setPassword(datasource.getPassword());
-        config.setDriverClassName(datasource.getDriver());
+        Datasource ds = null;
+        try {
 
-        dataSource = new HikariDataSource(config);
+            final AppConfig loadedConfig =  ConfigLoader.LOADER.getConfig();
+            ds = loadedConfig.getDatasource();
+
+            System.out.println(ds);
+            HikariConfig config = new HikariConfig();
+            config.setJdbcUrl(ds.getUrl());
+            config.setUsername(ds.getUsername());
+            config.setPassword(ds.getPassword());
+            config.setDriverClassName(ds.getDriver());
+
+            dataSource = new HikariDataSource(config);
+        } finally {
+            if (ds != null){
+                log.info("""
+                    Loaded datasource with: \
+
+                    \turl: %s
+                    \tusername: %s
+                    \tpassword: %s
+                    \tdriverClass: %s""".formatted(ds.getUrl(), ds.getUsername(), ds.getPassword(), ds.getDriver()));
+            }
+
+        }
     }
     public Connection getConnection() throws SQLException {
         return dataSource.getConnection();

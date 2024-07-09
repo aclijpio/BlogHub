@@ -3,8 +3,9 @@ package com.github.aclijpio.bloghub.database.repository;
 import com.github.aclijpio.bloghub.database.field.EntityInfo;
 import com.github.aclijpio.bloghub.database.util.EntityAnnotationUtil;
 import com.github.aclijpio.bloghub.database.util.DefaultConnectionPool;
-import com.github.aclijpio.bloghub.entities.User;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,12 +21,14 @@ public abstract class SimpleCrudRepository<T, ID> implements CrudRepository<T, I
 
     private final EntityInfo entityInfo;
 
-    protected SimpleCrudRepository(Class<T> clazz) {
-        this.entityInfo = EntityAnnotationUtil.get(clazz);
+    protected SimpleCrudRepository() {
+        this.entityInfo = EntityAnnotationUtil.get(this.getInnerClassType());
     }
 
     @Override
     public T save(T t) {
+
+
         return null;
     }
 
@@ -46,7 +49,7 @@ public abstract class SimpleCrudRepository<T, ID> implements CrudRepository<T, I
             try (ResultSet rs = ps.executeQuery()) {
                 List<T> results = new ArrayList<>();
                 while (rs.next()) {
-                    results.add((T) new User(rs.getString(0)));
+                    System.out.println(rs.getString(1));
                 }
                 return results;
             } catch (SQLException e) {
@@ -55,6 +58,7 @@ public abstract class SimpleCrudRepository<T, ID> implements CrudRepository<T, I
 
         });
     }
+
 
     @Override
     public Iterable<T> findAllById(Iterable<ID> iterable) {
@@ -84,6 +88,14 @@ public abstract class SimpleCrudRepository<T, ID> implements CrudRepository<T, I
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+
+    @SuppressWarnings("unchecked")
+    protected Class<T> getInnerClassType(){
+        Type t = getClass().getGenericSuperclass();
+        ParameterizedType pt = (ParameterizedType) t;
+        return (Class<T>) pt.getActualTypeArguments()[0];
     }
 }
 
