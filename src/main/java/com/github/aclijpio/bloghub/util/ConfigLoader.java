@@ -18,7 +18,6 @@ public enum ConfigLoader {
 
     LOADER;
 
-
     //Название конфигурационного файла
     private static final String CONFIG_FILE = "config.yaml";
 

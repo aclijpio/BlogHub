@@ -2,6 +2,7 @@ package com.github.aclijpio.bloghub.repositories;
 
 import com.github.aclijpio.bloghub.entities.User;
 import com.github.aclijpio.bloghub.exceptions.DatabaseOperationException;
+import com.github.aclijpio.bloghub.exceptions.IdRetrievalException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,13 +13,21 @@ import java.util.Optional;
 public class UserRepository extends CrudRepository<User, Long> {
 
     @Override
-    void persist(User user) {
-        executeQuery("INSERT INTO users (username, email) VALUES (?, ?)", ps -> {
+    public User persist(User user) {
+        return executeQuery("INSERT INTO users (username, email) VALUES (?, ?)", ps -> {
             try {
                 ps.setString(1, user.getUsername());
                 ps.setString(2, user.getEmail());
 
-                ps.execute();
+                ps.executeUpdate();
+                try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                    if (generatedKeys.next())
+                        user.setId(generatedKeys.getLong(1));
+                    else
+                        throw new IdRetrievalException("Failed to retrieve id for user with username: %s \n".formatted(user.getUsername()));
+                }
+
+                return user;
             }
             catch (SQLException e) {
                 throw new DatabaseOperationException("Failed to execute insert query for user with id: " + user.getId(), e);
@@ -27,24 +36,21 @@ public class UserRepository extends CrudRepository<User, Long> {
     }
 
     @Override
-    void merge(User user) {
-        executeQuery("UPDATE users SET username = ?, email = ? WHERE id = ?", ps -> {
+    public User merge(User user) {
+        return executeQuery("UPDATE users SET username = ?, email = ? WHERE id = ?", ps -> {
             try {
                 ps.setString(1, user.getUsername());
                 ps.setString(2, user.getEmail());
                 ps.setLong(3, user.getId());
 
                 ps.execute();
+
+                return user;
             }
             catch (SQLException e) {
                 throw new DatabaseOperationException("Failed to execute update query for user with id: " + user.getId(), e);
             }
         });
-    }
-
-    @Override
-    public Iterable<User> saveAll(Iterable<User> iterable) {
-        return null;
     }
 
     @Override
@@ -77,9 +83,7 @@ public class UserRepository extends CrudRepository<User, Long> {
     public Iterable<User> findAll() {
         return executeQuery("SELECT * FROM users", ps -> {
             try {
-
                 ResultSet resultSet = ps.executeQuery();
-
                 List<User> users = new ArrayList<>();
 
                 while (resultSet.next()) {
@@ -137,5 +141,13 @@ public class UserRepository extends CrudRepository<User, Long> {
             }
         });
     }
+    private static User mapUser(ResultSet rs) throws SQLException {
+        User user =  new User();
 
+        user.setId(rs.getLong("id"));
+        user.setUsername(rs.getString("username"));
+        user.setEmail(rs.getString("email"));
+
+        return user;
+    }
 }

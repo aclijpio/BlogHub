@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class    Datasource {
+public class Datasource {
     private String driver;
     private String url;
     private String username;

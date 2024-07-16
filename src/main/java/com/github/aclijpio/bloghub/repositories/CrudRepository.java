@@ -4,39 +4,40 @@ import com.github.aclijpio.bloghub.util.DefaultConnectionPool;
 import lombok.extern.slf4j.Slf4j;
 import org.intellij.lang.annotations.Language;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 
 @Slf4j
-public abstract class CrudRepository<T, ID> {
+public abstract class CrudRepository<T, ID extends Serializable> implements Repository<T, ID>{
 
-    void save(T t){
+    public T save(T t){
         if (checkIdExists(t))
-            this.merge(t);
+            return this.merge(t);
         else
-            this.persist(t);
+            return this.persist(t);
     }
 
-    abstract void persist(T t);
-    abstract void merge(T t);
+    public abstract T persist(T t);
+    public abstract T merge(T t);
 
-    abstract Iterable<T> saveAll(Iterable<T> iterable);
-    abstract Optional<T> findById(ID id);
-    abstract Iterable<T> findAll();
-    abstract void delete(T t);
-    abstract void deleteById(ID id);
+    public abstract Optional<T> findById(ID id);
+    public abstract Iterable<T> findAll();
+    public abstract void delete(T t);
+    public abstract void deleteById(ID id);
 
     abstract boolean checkIdExists(T t);
 
 
     public <R> R executeQuery(@Language("SQL") String query, Function<PreparedStatement, R> function) {
         try (Connection connection = DefaultConnectionPool.UTIL.getConnection();
-             PreparedStatement ps = connection.prepareStatement(query)) {
+             PreparedStatement ps = connection.prepareStatement(query,  Statement.RETURN_GENERATED_KEYS)) {
             return function.apply(ps);
 
         } catch (SQLException e) {
@@ -45,7 +46,7 @@ public abstract class CrudRepository<T, ID> {
     }
     public void executeQuery(@Language("SQL") String query, Consumer<PreparedStatement> function) {
         try (Connection connection = DefaultConnectionPool.UTIL.getConnection();
-             PreparedStatement ps = connection.prepareStatement(query)) {
+             PreparedStatement ps = connection.prepareStatement(query,  Statement.RETURN_GENERATED_KEYS)) {
             function.accept(ps);
         } catch (SQLException e) {
             log.error("Failed to execute query: %s".formatted(query), e);
