@@ -1,4 +1,4 @@
-package com.github.aclijpio.bloghub.util.source;
+package com.github.aclijpio.bloghub.utils.source;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

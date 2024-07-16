@@ -3,7 +3,7 @@ package com.github.aclijpio.bloghub.services.dtos;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class BlogDto {
+public class PostDto {
 
     private Long id;
 

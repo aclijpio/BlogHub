@@ -1,6 +1,6 @@
 package com.github.aclijpio.bloghub.repositories;
 
-import com.github.aclijpio.bloghub.util.DefaultConnectionPool;
+import com.github.aclijpio.bloghub.utils.DefaultConnectionPool;
 import lombok.extern.slf4j.Slf4j;
 import org.intellij.lang.annotations.Language;
 

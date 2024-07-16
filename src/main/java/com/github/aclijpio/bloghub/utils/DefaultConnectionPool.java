@@ -1,7 +1,7 @@
-package com.github.aclijpio.bloghub.util;
+package com.github.aclijpio.bloghub.utils;
 
-import com.github.aclijpio.bloghub.util.source.AppConfig;
-import com.github.aclijpio.bloghub.util.source.Datasource;
+import com.github.aclijpio.bloghub.utils.source.AppConfig;
+import com.github.aclijpio.bloghub.utils.source.Datasource;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.java.Log;

@@ -9,6 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -109,6 +111,27 @@ public class PostRepository extends CrudRepository<Post, Long> {
         });
     }
 
+    public List<Post> findAllByDate(LocalDateTime date) {
+        return executeQuery("SELECT * FROM posts WHERE createdate >= ?", ps -> {
+            try {
+                ps.setTimestamp(1, Timestamp.valueOf(date));
+
+                ResultSet resultSet = ps.executeQuery();
+                List<Post> posts = new ArrayList<>();
+
+                while (resultSet.next()) {
+                    posts.add(mapPost(resultSet));
+                }
+
+                return posts;
+
+            } catch (SQLException e) {
+                throw new DatabaseOperationException("Failed to execute select query for posts from date: " + date, e);
+            }
+        });
+    }
+
+
     @Override
     public void delete(Post post) {
         deleteById(post.getId());
@@ -144,6 +167,7 @@ public class PostRepository extends CrudRepository<Post, Long> {
             }
         });
     }
+
     private static Post mapPost(ResultSet resultSet) throws SQLException {
         Post post =  new Post();
 

@@ -1,10 +1,10 @@
-package com.github.aclijpio.bloghub.util;
+package com.github.aclijpio.bloghub.utils;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.github.aclijpio.bloghub.util.exceptions.AppConfigException;
-import com.github.aclijpio.bloghub.util.source.AppConfig;
+import com.github.aclijpio.bloghub.utils.exceptions.AppConfigException;
+import com.github.aclijpio.bloghub.utils.source.AppConfig;
 import lombok.extern.java.Log;
 
 import java.io.File;
