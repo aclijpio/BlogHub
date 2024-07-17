@@ -29,10 +29,10 @@ public abstract class CrudRepository<T, ID extends Serializable> implements Repo
 
     public abstract Optional<T> findById(ID id);
     public abstract Iterable<T> findAll();
-    public abstract void delete(T t);
-    public abstract void deleteById(ID id);
+    public abstract boolean delete(T t);
+    public abstract boolean deleteById(ID id);
 
-    abstract boolean checkIdExists(T t);
+    public abstract boolean checkIdExists(T t);
 
 
     public <R> R executeQuery(@Language("SQL") String query, Function<PreparedStatement, R> function) {

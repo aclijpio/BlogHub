@@ -1,8 +1,9 @@
-package com.github.aclijpio.bloghub.repositories;
+package com.github.aclijpio.bloghub.repositories.impl;
 
 import com.github.aclijpio.bloghub.entities.User;
-import com.github.aclijpio.bloghub.exceptions.DatabaseOperationException;
-import com.github.aclijpio.bloghub.exceptions.IdRetrievalException;
+import com.github.aclijpio.bloghub.exceptions.dababase.DatabaseOperationException;
+import com.github.aclijpio.bloghub.exceptions.dababase.IdRetrievalException;
+import com.github.aclijpio.bloghub.repositories.CrudRepository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,6 +12,11 @@ import java.util.List;
 import java.util.Optional;
 
 public class UserRepository extends CrudRepository<User, Long> {
+
+    public static final UserRepository INSTANCE = new UserRepository();
+
+    private UserRepository() {
+    }
 
     @Override
     public User persist(User user) {
@@ -55,7 +61,6 @@ public class UserRepository extends CrudRepository<User, Long> {
 
     @Override
     public Optional<User> findById(Long aLong) {
-
         return executeQuery("SELECT * FROM users WHERE id = ?", ps -> {
             try {
                 ps.setLong(1, aLong);
@@ -80,7 +85,7 @@ public class UserRepository extends CrudRepository<User, Long> {
     }
 
     @Override
-    public Iterable<User> findAll() {
+    public List<User> findAll() {
         return executeQuery("SELECT * FROM users", ps -> {
             try {
                 ResultSet resultSet = ps.executeQuery();
@@ -107,12 +112,12 @@ public class UserRepository extends CrudRepository<User, Long> {
 
 
     @Override
-    public void delete(User user) {
-        deleteById(user.getId());
+    public boolean delete(User user) {
+        return deleteById(user.getId());
     }
 
     @Override
-    public void deleteById(Long aLong) {
+    public boolean deleteById(Long aLong) {
         executeQuery("DELETE FROM users WHERE id = ?", ps -> {
             try {
                 ps.setLong(1, aLong);
@@ -122,10 +127,11 @@ public class UserRepository extends CrudRepository<User, Long> {
                 throw new DatabaseOperationException("Failed to execute delete query for user with id: " + aLong, e);
             }
         });
+        return true;
     }
 
     @Override
-    boolean checkIdExists(User user) {
+    public boolean checkIdExists(User user) {
         if (user.getId() == null) return false;
         return executeQuery("SElECT EXISTS (SELECT id FROM users WHERE id = ?)", ps -> {
             try {

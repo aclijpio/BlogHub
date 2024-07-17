@@ -1,15 +1,19 @@
 package com.github.aclijpio.bloghub.entities;
 
 
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class Comment {
 
     private Long id;
     private String content;
-    private User author;
 
-    public Comment(String content, User author) {
+    public Comment() {
+    }
+    public Comment(String content) {
         this.content = content;
-        this.author = author;
     }
 }
