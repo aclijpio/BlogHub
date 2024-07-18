@@ -13,12 +13,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 
@@ -26,8 +27,8 @@ class UserServiceTest {
 
     @Mock
     UserRepository repository;
-    @Mock
-    UserMapper mapper;
+
+    UserMapper mapper = UserMapper.INSTANCE;
 
     @InjectMocks
     UserServiceImpl userService;
@@ -37,6 +38,8 @@ class UserServiceTest {
     private UserDto userDto;
     private UserRequest userRequest;
 
+    private List<UserDto> userDtoList;
+
 
     @BeforeEach
     public void setUp() {
@@ -44,33 +47,34 @@ class UserServiceTest {
         MockitoAnnotations.openMocks(this);
 
         user = new User("username", "email@example.com");
-        userDto = new UserDto("username", "email@example.com");
+        userDto = mapper.toDto(user);
         userRequest = new UserRequest("username", "email@example.com");
+
+
     }
 
 
     @Test
     public void testGetAllUsers() {
-        List<User> users = Arrays.asList(user);
-        List<UserDto> userDtos = Arrays.asList(userDto);
+        List<User> users = Collections.singletonList(user);
 
         when(repository.findAll()).thenReturn(users);
-        when(mapper.toDtoList(users)).thenReturn(userDtos);
 
         List<UserDto> result = userService.getAllUsers();
+
+
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals(userDto, result.get(0));
+        assertEquals(userDto.getEmail(), result.get(0).getEmail());
     }
 
     @Test
     public void testGetUserById_UserExists() {
         when(repository.findById(anyLong())).thenReturn(Optional.of(user));
-        when(mapper.toDto(any(User.class))).thenReturn(userDto);
 
         UserDto result = userService.getUserById(1L);
         assertNotNull(result);
-        assertEquals(userDto, result);
+        assertEquals(userDto.getUsername(), result.getUsername());
     }
 
     @Test
@@ -82,7 +86,6 @@ class UserServiceTest {
 
     @Test
     public void testCreateUser() {
-        when(mapper.toDto(any(User.class))).thenReturn(userDto);
 
         userService.createUser(userRequest);
         verify(repository, times(1)).save(any(User.class));
